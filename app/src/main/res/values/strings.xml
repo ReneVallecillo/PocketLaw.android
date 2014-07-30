@@ -1,3 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">PocketLaw</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    //Navigation Drawer Options
+    <string-array name="navigation_drawer_options">
+        <item>Home</item>
+        <item>Leyes</item>
+        <item>Temario</item>
+        <item>Herramientas</item>
+        <item>Favoritos</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
