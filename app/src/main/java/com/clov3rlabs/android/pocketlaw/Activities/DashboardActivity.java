@@ -1,20 +1,26 @@
 package com.clov3rlabs.android.pocketlaw.Activities;
 
 import android.app.Activity;
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.os.Build;
 import android.widget.ListView;
 
+import com.clov3rlabs.android.pocketlaw.Core.NavigationDrawerSetup;
+import com.clov3rlabs.android.pocketlaw.Fragments.DashboardFragment;
 import com.clov3rlabs.android.pocketlaw.Listeners.DrawerItemClickListener;
 import com.clov3rlabs.android.pocketlaw.R;
 
-
-public class BaseActivity extends Activity {
+public class DashboardActivity extends Activity implements DashboardFragment.OnFragmentInteractionListener {
 
     private String[] mMenuTitles;
     private DrawerLayout mDrawerLayout;
@@ -23,55 +29,31 @@ public class BaseActivity extends Activity {
     private CharSequence mTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
-
+    private NavigationDrawerSetup navigationDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
+        setContentView(R.layout.activity_dashboard);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.content_frame, new DashboardFragment())
+                    .commit();
+        }
 
         mMenuTitles = getResources().getStringArray(R.array.navigation_drawer_options);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        //TODO Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mMenuTitles));
-        //TODO Set the list's click listener
-        mDrawerListener = new DrawerItemClickListener(BaseActivity.this,mDrawerLayout,mDrawerList,mMenuTitles);
-
-        mDrawerList.setOnItemClickListener( mDrawerListener );
-        mTitle = mDrawerListener.getTitle();
-
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
+        navigationDrawer = new NavigationDrawerSetup(mMenuTitles,mDrawerLayout,mDrawerList,getActionBar(),DashboardActivity.this);
+        navigationDrawer.configureDrawer();
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.base, menu);
+        getMenuInflater().inflate(R.menu.dashboard, menu);
         return true;
     }
 
@@ -87,11 +69,6 @@ public class BaseActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        getActionBar().setTitle(mTitle);
-    }
-
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -102,4 +79,8 @@ public class BaseActivity extends Activity {
     }
 
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }
