@@ -1,41 +1,54 @@
 package com.clov3rlabs.android.pocketlaw.Fragments;
 
 import android.app.Activity;
+import android.app.ListFragment;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
+import com.clov3rlabs.android.pocketlaw.Adapters.LawListAdapter;
+import com.clov3rlabs.android.pocketlaw.Entities.Law;
+import com.clov3rlabs.android.pocketlaw.Loaders.LawListLoader;
 import com.clov3rlabs.android.pocketlaw.R;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DashboardFragment.OnFragmentInteractionListener} interface
+ * {@link LawFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link DashboardFragment#newInstance} factory method to
+ * Use the {@link LawFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class DashboardFragment extends Fragment {
+public class LawFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Law>> {
+
 
     private OnFragmentInteractionListener mListener;
+    private LawListAdapter lawListAdapter;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * No parameter
-     * @return A new instance of fragment DashboardFragment.
+
+     * @return A new instance of fragment LawFragment.
      */
-    public static DashboardFragment newInstance() {
-        DashboardFragment fragment = new DashboardFragment();
+
+    public static LawFragment newInstance() {
+        LawFragment fragment = new LawFragment();
 
         return fragment;
     }
-    public DashboardFragment() {
+    public LawFragment() {
         // Required empty public constructor
     }
 
@@ -51,7 +64,24 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_law, container, false);
+
+        // Create a progress bar to display while the list loads
+        ProgressBar progressBar = new ProgressBar(getActivity());
+        progressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        progressBar.setIndeterminate(true);
+        getListView().setEmptyView(progressBar);
+
+        // Must add the progress bar to the root of the layout
+        ViewGroup root = (ViewGroup) view.findViewById(android.R.id.content);
+        root.addView(progressBar);
+
+        //Create Adapter with empty data
+        lawListAdapter = new LawListAdapter(getActivity(),null);
+        setListAdapter(lawListAdapter);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -78,6 +108,26 @@ public class DashboardFragment extends Fragment {
         mListener = null;
     }
 
+    //LoaderManager Methods
+
+    @Override
+    public Loader<List<Law>> onCreateLoader(int i, Bundle bundle) {
+        return new LawListLoader(getActivity().getApplicationContext());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Law>> listLoader, List<Law> laws) {
+
+        lawListAdapter.newData(laws);
+        lawListAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Law>> listLoader) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -92,5 +142,7 @@ public class DashboardFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
+    //TODO implement loader
 
 }

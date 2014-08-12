@@ -6,20 +6,21 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
-
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".Activities.BaseActivity"
             android:label="@string/title_activity_base" >
         </activity>
-        <activity
-            android:name=".Activities.DashboardActivity"
-             >
+        <activity android:name=".Activities.DashboardActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.LawActivity"
+            android:label="@string/title_activity_law" >
         </activity>
     </application>
 
