@@ -2,12 +2,20 @@ package com.clov3rlabs.android.pocketlaw.Loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.clov3rlabs.android.pocketlaw.Api.ApiClient;
 import com.clov3rlabs.android.pocketlaw.Entities.Law;
+import com.clov3rlabs.android.pocketlaw.R;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by reneval on 8/11/14.
@@ -15,6 +23,9 @@ import java.util.List;
 public class LawListLoader extends AsyncTaskLoader<List<Law>> {
 
     private List<Law> mData;
+    private static String TAG = "LawListLoader";
+    private static boolean DEBUG = true;
+
 
     public LawListLoader (Context context){
         super(context);
@@ -23,7 +34,16 @@ public class LawListLoader extends AsyncTaskLoader<List<Law>> {
     @Override
     public List<Law> loadInBackground() {
 
-        mData = ApiClient.getPocketLawApiClient().getLaws();
+        if(DEBUG) Log.d(TAG,"Now loading LawList");
+
+        mData = new ArrayList<Law>();
+        try {
+            mData = ApiClient.getPocketLawApiClient().getLaws();
+        }catch (RetrofitError error){
+
+        }
+
+
 
         if (mData !=null)
             if(!mData.isEmpty())
@@ -31,6 +51,22 @@ public class LawListLoader extends AsyncTaskLoader<List<Law>> {
 
         return null;
 
+    }
+
+    @Override
+    protected void onStartLoading() {
+        if (mData != null) {
+            // Deliver any previously loaded data immediately.
+            deliverResult(mData);
+        }
+
+        if (takeContentChanged() || mData == null) {
+            // When the observer detects a change, it should call onContentChanged()
+            // on the Loader, which will cause the next call to takeContentChanged()
+            // to return true. If this is ever the case (or if the current data is
+            // null), we force a new load.
+            forceLoad();
+        }
     }
 
     @Override

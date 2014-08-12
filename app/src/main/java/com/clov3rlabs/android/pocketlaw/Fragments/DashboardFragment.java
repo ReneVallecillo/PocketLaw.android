@@ -7,8 +7,13 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.clov3rlabs.android.pocketlaw.Listeners.DashboardClickListener;
 import com.clov3rlabs.android.pocketlaw.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +27,7 @@ import com.clov3rlabs.android.pocketlaw.R;
 public class DashboardFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private List<ImageView> dashViews = new ArrayList<ImageView>();
 
     /**
      * Use this factory method to create a new instance of
@@ -51,7 +57,17 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        dashViews.add((ImageView) view.findViewById(R.id.icon_law));
+        dashViews.add((ImageView) view.findViewById(R.id.icon_theme));
+        dashViews.add((ImageView) view.findViewById(R.id.icon_tool));
+        dashViews.add((ImageView) view.findViewById(R.id.icon_favorite));
+
+        for(int i =0; i < dashViews.size(); i++)
+            dashViews.get(0).setOnClickListener(new DashboardClickListener(getActivity(),i));
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -3,6 +3,7 @@ package com.clov3rlabs.android.pocketlaw.Activities;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,9 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+import com.clov3rlabs.android.pocketlaw.Fragments.LawFragment;
 import com.clov3rlabs.android.pocketlaw.R;
 
-public class LawActivity extends Activity {
+public class LawActivity extends Activity implements LawFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +23,7 @@ public class LawActivity extends Activity {
         setContentView(R.layout.activity_law);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new LawFragment())
                     .commit();
         }
     }
@@ -46,19 +48,8 @@ public class LawActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_law, container, false);
-            return rootView;
-        }
     }
 }

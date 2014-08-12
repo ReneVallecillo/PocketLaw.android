@@ -4,15 +4,18 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.clov3rlabs.android.pocketlaw.Adapters.LawListAdapter;
 import com.clov3rlabs.android.pocketlaw.Entities.Law;
@@ -35,7 +38,15 @@ public class LawFragment extends ListFragment implements LoaderManager.LoaderCal
 
     private OnFragmentInteractionListener mListener;
     private LawListAdapter lawListAdapter;
+    // The loader's unique id. Loader ids are specific to the Activity or
+    // Fragment in which they reside.
+    private static final int LOADER_ID = 1;
+    // The callbacks through which we will interact with the LoaderManager.
+    private LoaderManager.LoaderCallbacks<List<Law>> mCallbacks;
 
+
+    private static String TAG = "LawFragment";
+    private static boolean DEBUG = true;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -66,6 +77,17 @@ public class LawFragment extends ListFragment implements LoaderManager.LoaderCal
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_law, container, false);
 
+        mCallbacks = this;
+        LoaderManager lm = getLoaderManager();
+        lm.initLoader(LOADER_ID, null, mCallbacks);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         // Create a progress bar to display while the list loads
         ProgressBar progressBar = new ProgressBar(getActivity());
         progressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -74,14 +96,9 @@ public class LawFragment extends ListFragment implements LoaderManager.LoaderCal
         getListView().setEmptyView(progressBar);
 
         // Must add the progress bar to the root of the layout
-        ViewGroup root = (ViewGroup) view.findViewById(android.R.id.content);
+        ViewGroup root = (ViewGroup) getActivity().findViewById(android.R.id.content);
         root.addView(progressBar);
 
-        //Create Adapter with empty data
-        lawListAdapter = new LawListAdapter(getActivity(),null);
-        setListAdapter(lawListAdapter);
-
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -112,14 +129,22 @@ public class LawFragment extends ListFragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<List<Law>> onCreateLoader(int i, Bundle bundle) {
+        Log.d(TAG,"onCreateLoader Called");
         return new LawListLoader(getActivity().getApplicationContext());
     }
 
     @Override
     public void onLoadFinished(Loader<List<Law>> listLoader, List<Law> laws) {
+        Log.d(TAG,"onLoadFinished");
 
-        lawListAdapter.newData(laws);
-        lawListAdapter.notifyDataSetChanged();
+        if(laws != null) {
+            //Create Adapter with empty data
+            lawListAdapter = new LawListAdapter(getActivity(), laws);
+            setListAdapter(lawListAdapter);
+            lawListAdapter.notifyDataSetChanged();
+        }else{
+            Toast.makeText(getActivity(),"No se retorno data",Toast.LENGTH_LONG);
+        }
 
     }
 

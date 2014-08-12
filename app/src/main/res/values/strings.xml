@@ -20,4 +20,9 @@
     <string name="title_activity_dashboard">DashboardActivity</string>
     <string name="title_activity_law">LawActivity</string>
 
+
+    //Errors
+    <string name="error_network">No hay conexion con el servicio de Leyes</string>
+    <string name="error_404">No se encontro el recurso con la URL especificada </string>
+
 </resources>

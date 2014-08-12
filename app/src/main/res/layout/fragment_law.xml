@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,7 +11,7 @@
     tools:context="com.clov3rlabs.android.pocketlaw.Activities.LawActivity$PlaceholderFragment">
 
     <ListView
-        android:id="@+id/law_list"
+        android:id="@+id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
