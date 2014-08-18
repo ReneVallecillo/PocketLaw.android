@@ -1,10 +1,11 @@
 package com.clov3rlabs.android.pocketlaw.Fragments;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,13 +29,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LawFragment.OnFragmentInteractionListener} interface
+ * {@link LawListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link LawFragment#newInstance} factory method to
+ * Use the {@link LawListFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class LawFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Law>> {
+public class LawListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Law>> {
 
 
     private OnFragmentInteractionListener mListener;
@@ -45,21 +47,31 @@ public class LawFragment extends ListFragment implements LoaderManager.LoaderCal
     private LoaderManager.LoaderCallbacks<List<Law>> mCallbacks;
 
 
-    private static String TAG = "LawFragment";
+    private static String TAG = "LawListFragment";
     private static boolean DEBUG = true;
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.replace(R.id.container, ArticleListFragment.newInstance(1));
+        ft.commit();
+
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
 
-     * @return A new instance of fragment LawFragment.
+     * @return A new instance of fragment LawListFragment.
      */
 
-    public static LawFragment newInstance() {
-        LawFragment fragment = new LawFragment();
+    public static LawListFragment newInstance() {
+        LawListFragment fragment = new LawListFragment();
 
         return fragment;
     }
-    public LawFragment() {
+    public LawListFragment() {
         // Required empty public constructor
     }
 

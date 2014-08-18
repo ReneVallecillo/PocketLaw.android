@@ -1,21 +1,16 @@
 package com.clov3rlabs.android.pocketlaw.Activities;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
-import com.clov3rlabs.android.pocketlaw.Fragments.LawFragment;
+import com.clov3rlabs.android.pocketlaw.Fragments.ArticleListFragment;
+import com.clov3rlabs.android.pocketlaw.Fragments.LawListFragment;
 import com.clov3rlabs.android.pocketlaw.R;
 
-public class LawActivity extends Activity implements LawFragment.OnFragmentInteractionListener {
+public class LawActivity extends Activity implements LawListFragment.OnFragmentInteractionListener, ArticleListFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +18,7 @@ public class LawActivity extends Activity implements LawFragment.OnFragmentInter
         setContentView(R.layout.activity_law);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new LawFragment())
+                    .add(R.id.container, new LawListFragment())
                     .commit();
         }
     }
@@ -50,6 +45,11 @@ public class LawActivity extends Activity implements LawFragment.OnFragmentInter
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(String id) {
 
     }
 }

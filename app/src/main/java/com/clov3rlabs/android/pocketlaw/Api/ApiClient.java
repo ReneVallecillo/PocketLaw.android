@@ -2,6 +2,7 @@ package com.clov3rlabs.android.pocketlaw.Api;
 
 import android.util.Log;
 
+import com.clov3rlabs.android.pocketlaw.Entities.Article;
 import com.clov3rlabs.android.pocketlaw.Entities.Law;
 
 import java.net.SocketTimeoutException;
@@ -12,6 +13,7 @@ import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.GET;
+import retrofit.http.Path;
 
 /**
  * Created by reneval on 8/11/14.
@@ -37,6 +39,9 @@ public class ApiClient {
     public interface PocketLawApiInterface {
         @GET("/v0.1/laws.json")
         List<Law> getLaws();
+
+        @GET("/v0.1/laws/{law_id}/all.json")
+        List<Article> getAllArticles(@Path("law_id") int law_id);
 
     }
 

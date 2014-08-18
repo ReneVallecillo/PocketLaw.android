@@ -11,4 +11,8 @@
         parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/light_blue</item>
     </style>
+
+    <style name="ArticleTitle" parent="android:Theme.Holo.Light">
+        <item name="android:textSize">22sp</item>
+    </style>
 </resources>
