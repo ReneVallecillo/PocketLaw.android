@@ -24,7 +24,7 @@ public class ApiClient {
     public static PocketLawApiInterface getPocketLawApiClient(){
         if (mPocketLawInterface == null) {
             RestAdapter restAdapter = new RestAdapter.Builder()
-                    .setEndpoint("http://google.com/api")
+                    .setEndpoint("http://192.168.8.107:3000/api")
                     .setErrorHandler(new SyncErrorHandler())
                     .build();
 
