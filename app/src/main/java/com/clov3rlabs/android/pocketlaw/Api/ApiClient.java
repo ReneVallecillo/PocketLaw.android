@@ -43,6 +43,9 @@ public class ApiClient {
         @GET("/v0.1/laws/{law_id}/all.json")
         List<Article> getAllArticles(@Path("law_id") int law_id);
 
+        @GET("/v0.1/articles/{article_id}/law/{law_id}.json")
+        Article getArticle(@Path("id") int id);
+
     }
 
 
