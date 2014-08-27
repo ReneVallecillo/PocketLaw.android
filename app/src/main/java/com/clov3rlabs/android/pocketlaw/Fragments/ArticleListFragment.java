@@ -1,35 +1,31 @@
 package com.clov3rlabs.android.pocketlaw.Fragments;
 
 import android.app.Activity;
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.clov3rlabs.android.pocketlaw.Adapters.ArticleListAdapter;
-import com.clov3rlabs.android.pocketlaw.Adapters.LawListAdapter;
 import com.clov3rlabs.android.pocketlaw.Entities.Article;
-import com.clov3rlabs.android.pocketlaw.Entities.Law;
+import com.clov3rlabs.android.pocketlaw.Entities.ArticleCard;
 import com.clov3rlabs.android.pocketlaw.Loaders.ArticlesLoaderLoader;
-import com.clov3rlabs.android.pocketlaw.Loaders.LawListLoader;
 import com.clov3rlabs.android.pocketlaw.R;
 
-import com.clov3rlabs.android.pocketlaw.Fragments.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardListView;
 
 /**
  * A fragment representing a list of Items.
@@ -40,9 +36,9 @@ import java.util.List;
  * Activities containing this fragment MUST implement the CallBacks
  * interface.
  */
-public class ArticleListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Article>> {
+public class ArticleListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Article>> {
 
-
+    private static String TAG = "ArticleListFragment";
     private static final String ARG_LAW_ID = "law_id";
     private int mLawID;
     private OnFragmentInteractionListener mListener;
@@ -64,7 +60,6 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
     // Fragment in which they reside.
     private static final int LOADER_ID = 2;
 
-    // TODO: Rename and change types of parameters
     public static ArticleListFragment newInstance(int law_id) {
         ArticleListFragment fragment = new ArticleListFragment();
         Bundle args = new Bundle();
@@ -93,7 +88,7 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_article, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_article_card, container, false);
 
 
         mCallbacks = this;
@@ -107,16 +102,16 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Create a progress bar to display while the list loads
-        ProgressBar progressBar = new ProgressBar(getActivity());
-        progressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-        progressBar.setIndeterminate(true);
-        getListView().setEmptyView(progressBar);
-
-        // Must add the progress bar to the root of the layout
-        ViewGroup root = (ViewGroup) getActivity().findViewById(android.R.id.content);
-        root.addView(progressBar);
+//        // Create a progress bar to display while the list loads
+//        ProgressBar progressBar = new ProgressBar(getActivity());
+//        progressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+//        progressBar.setIndeterminate(true);
+//        getListView().setEmptyView(progressBar);
+//
+//        // Must add the progress bar to the root of the layout
+//        ViewGroup root = (ViewGroup) getActivity().findViewById(android.R.id.content);
+//        root.addView(progressBar);
     }
 
     @Override
@@ -142,13 +137,13 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
      * the list is empty. If you would like to change the text, call this method
      * to supply the text it should use.
      */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyText instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
+//    public void setEmptyText(CharSequence emptyText) {
+//        View emptyView = mListView.getEmptyView();
+//
+//        if (emptyText instanceof TextView) {
+//            ((TextView) emptyView).setText(emptyText);
+//        }
+//    }
 
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
@@ -158,10 +153,12 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
     @Override
     public void onLoadFinished(Loader<List<Article>> listLoader, List<Article> articles) {
         if(articles != null) {
-            //Create Adapter with empty data
-            mArticleListAdapter= new ArticleListAdapter(getActivity(), articles);
-            setListAdapter(mArticleListAdapter);
-            mArticleListAdapter.notifyDataSetChanged();
+            Log.d(TAG,"onLoadFinished");
+//            //Create Adapter with empty data
+//            mArticleListAdapter= new ArticleListAdapter(getActivity(), articles);
+//            setListAdapter(mArticleListAdapter);
+//            mArticleListAdapter.notifyDataSetChanged();
+              initCards(articles);
         }else{
             Toast.makeText(getActivity(), "No se retorno data", Toast.LENGTH_LONG);
         }
@@ -169,6 +166,27 @@ public class ArticleListFragment extends ListFragment implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<List<Article>> listLoader) {
+
+    }
+
+    private void initCards(List<Article> articles){
+        //Init an array of Cards
+        ArrayList<Card> cards = new ArrayList<Card>();
+        for (int i=0;i<articles.size();i++){
+            ArticleCard card = new ArticleCard(this.getActivity());
+            card.setTitle(articles.get(i).getName());
+            card.setText(articles.get(i).getText());
+            card.init();
+            cards.add(card);
+        }
+
+        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(),cards);
+
+        CardListView listView = (CardListView)getActivity().findViewById(R.id.card_list_article_card);
+
+        if (listView!=null){
+            listView.setAdapter(mCardArrayAdapter);
+        }
 
     }
 
