@@ -41,16 +41,16 @@ public class ArticleCard extends Card {
     public void init() {
 
 
-        //Add thumbnail
-        CardThumbnail cardThumbnail = new CardThumbnail(mContext);
-
-        if (resourceIdThumbnail==0)
-            cardThumbnail.setDrawableResource(R.drawable.ic_launcher);
-        else{
-            cardThumbnail.setDrawableResource(resourceIdThumbnail);
-        }
-
-        addCardThumbnail(cardThumbnail);
+//        //Add thumbnail
+//        CardThumbnail cardThumbnail = new CardThumbnail(mContext);
+//
+//        if (resourceIdThumbnail==0)
+//            cardThumbnail.setDrawableResource(R.drawable.ic_launcher);
+//        else{
+//            cardThumbnail.setDrawableResource(resourceIdThumbnail);
+//        }
+//
+//        addCardThumbnail(cardThumbnail);
 
         //Only for test, some cards have different clickListeners
         if (count==12){
