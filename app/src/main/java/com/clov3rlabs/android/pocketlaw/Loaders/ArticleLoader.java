@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.clov3rlabs.android.pocketlaw.Api.ApiClient;
 import com.clov3rlabs.android.pocketlaw.Entities.Article;
-import com.clov3rlabs.android.pocketlaw.Entities.Law;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,33 +15,32 @@ import retrofit.RetrofitError;
 /**
  * Created by reneval on 8/11/14.
  */
-public class ArticlesLoaderLoader extends AsyncTaskLoader<List<Article>> {
+public class ArticleLoader extends AsyncTaskLoader<Article> {
 
-    private List<Article> mData;
+    private Article mData;
     private static String TAG = "LawListLoader";
     private static boolean DEBUG = true;
-    private int mLawID;
+    private int mArticleId;
 
-    public ArticlesLoaderLoader(Context context,int lawID){
+    public ArticleLoader(Context context, int articleId){
         super(context);
-        mLawID = lawID;
+        mArticleId = articleId;
     }
 
     @Override
-    public List<Article> loadInBackground() {
+    public Article loadInBackground() {
 
-        if(DEBUG) Log.d(TAG,"Now loading all Articles");
+        if(DEBUG) Log.d(TAG,"Now loading article");
 
-        mData = new ArrayList<Article>();
+        mData = new Article();
         try {
-            mData = ApiClient.getPocketLawApiClient().getAllArticles(mLawID);
+            mData = ApiClient.getPocketLawApiClient().getArticle(mArticleId);
         }catch (RetrofitError error){
 
         }
 
         if (mData !=null)
-            if(!mData.isEmpty())
-                return mData;
+            return mData;
 
         return null;
 
@@ -88,7 +86,7 @@ public class ArticlesLoaderLoader extends AsyncTaskLoader<List<Article>> {
     }
 
     @Override
-    public void deliverResult(List<Article> data) {
+    public void deliverResult(Article data) {
         if (isReset()) {
             // The Loader has been reset; ignore the result and invalidate the data.
             releaseResources(data);
@@ -97,7 +95,7 @@ public class ArticlesLoaderLoader extends AsyncTaskLoader<List<Article>> {
 
         // Hold a reference to the old data so it doesn't get garbage collected.
         // We must protect it until the new data has been delivered.
-        List<Article> oldData = mData;
+        Article oldData = mData;
         mData = data;
 
         if (isStarted()) {
@@ -112,16 +110,15 @@ public class ArticlesLoaderLoader extends AsyncTaskLoader<List<Article>> {
         }
     }
 
-    private void releaseResources(List<Article> data) {
+    private void releaseResources(Article data) {
         // For a simple List, there is nothing to do. For something like a Cursor, we
         // would close it in this method. All resources associated with the Loader
         // should be released here.
-        data.clear();
     }
 
 
     @Override
-    public void onCanceled(List<Article> data) {
+    public void onCanceled(Article data) {
         // Attempt to cancel the current asynchronous load.
         super.onCanceled(data);
 
