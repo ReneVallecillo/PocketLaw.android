@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LawListFragment.OnFragmentInteractionListener} interface
+ * {@link com.clov3rlabs.android.pocketlaw.Fragments.LawListFragment.OnLawSelectedListener} interface
  * to handle interaction events.
  * Use the {@link LawListFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -38,7 +38,7 @@ import java.util.List;
 public class LawListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Law>> {
 
 
-    private OnFragmentInteractionListener mListener;
+    private OnLawSelectedListener mListener;
     private LawListAdapter lawListAdapter;
     // The loader's unique id. Loader ids are specific to the Activity or
     // Fragment in which they reside.
@@ -52,10 +52,10 @@ public class LawListFragment extends ListFragment implements LoaderManager.Loade
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.replace(R.id.container, ArticleListFragment.newInstance(1));
-        ft.commit();
+
+        LawListAdapter.ViewHolder holder = new LawListAdapter.ViewHolder();
+        holder = (LawListAdapter.ViewHolder) v.getTag();
+        mListener.onLawSelected((holder.articleId));
 
     }
 
@@ -71,6 +71,7 @@ public class LawListFragment extends ListFragment implements LoaderManager.Loade
 
         return fragment;
     }
+
     public LawListFragment() {
         // Required empty public constructor
     }
@@ -114,9 +115,9 @@ public class LawListFragment extends ListFragment implements LoaderManager.Loade
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(int lawId) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onLawSelected(lawId);
         }
     }
 
@@ -124,7 +125,7 @@ public class LawListFragment extends ListFragment implements LoaderManager.Loade
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnLawSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -175,11 +176,10 @@ public class LawListFragment extends ListFragment implements LoaderManager.Loade
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnLawSelectedListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onLawSelected(int lawId);
     }
 
-    //TODO implement loader
 
 }

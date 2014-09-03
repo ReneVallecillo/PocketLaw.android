@@ -7,18 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clov3rlabs.android.pocketlaw.Adapters.ArticleListAdapter;
-import com.clov3rlabs.android.pocketlaw.Fragments.ArticleListFragment;
 import com.clov3rlabs.android.pocketlaw.R;
 
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.CardThumbnail;
 
 /**
  * Created by reneval on 8/18/14.
  */
-public class ArticleCard extends Card {
+public class ArticleFullCard extends Card {
 
     protected TextView mTitle;
     protected TextView mText;
@@ -31,32 +27,17 @@ public class ArticleCard extends Card {
     protected int count;
     protected int resourceIdThumbnail;
 
-    private OnArticleCardClickListener mListener;
 
-
-
-    public ArticleCard(Context context) {
-        super(context, R.layout.card_article_inner_content);
+    public ArticleFullCard(Context context) {
+        super(context, R.layout.card_full_content);
     }
 
-    public ArticleCard(Context context,int innerLayout) {
+    public ArticleFullCard(Context context, int innerLayout) {
         super(context, innerLayout);
     }
 
 
     public void init() {
-
-
-//        //Add thumbnail
-//        CardThumbnail cardThumbnail = new CardThumbnail(mContext);
-//
-//        if (resourceIdThumbnail==0)
-//            cardThumbnail.setDrawableResource(R.drawable.ic_launcher);
-//        else{
-//            cardThumbnail.setDrawableResource(resourceIdThumbnail);
-//        }
-//
-//        addCardThumbnail(cardThumbnail);
 
         //Only for test, some cards have different clickListeners
         if (count==12){
@@ -75,15 +56,6 @@ public class ArticleCard extends Card {
             });
 
         }else{
-
-            //Add ClickListener
-//            setOnClickListener(new OnCardClickListener() {
-//                @Override
-//                public void onClick(Card card, View view) {
-//                    Toast.makeText(getContext(), "Click Listener card=" + articleId, Toast.LENGTH_SHORT).show();
-//                    mListener.onArticleCardClick(articleId);
-//                }
-//            });
 
         }
 
@@ -143,9 +115,5 @@ public class ArticleCard extends Card {
 
     public void setArticleId(int articleId) {
         this.articleId = articleId;
-    }
-
-    public interface OnArticleCardClickListener{
-        public void onArticleCardClick(int id);
     }
 }

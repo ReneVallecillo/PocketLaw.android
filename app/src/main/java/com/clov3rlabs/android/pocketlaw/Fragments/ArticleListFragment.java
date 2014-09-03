@@ -2,6 +2,7 @@ package com.clov3rlabs.android.pocketlaw.Fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.os.Bundle;
@@ -10,13 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.clov3rlabs.android.pocketlaw.Adapters.ArticleListAdapter;
+import com.clov3rlabs.android.pocketlaw.Adapters.LawListAdapter;
 import com.clov3rlabs.android.pocketlaw.Entities.Article;
 import com.clov3rlabs.android.pocketlaw.Entities.ArticleCard;
-import com.clov3rlabs.android.pocketlaw.Loaders.ArticlesLoaderLoader;
+import com.clov3rlabs.android.pocketlaw.Listeners.ArticleCardClickListener;
+import com.clov3rlabs.android.pocketlaw.Loaders.ArticleListLoader;
 import com.clov3rlabs.android.pocketlaw.R;
 
 
@@ -36,12 +39,13 @@ import it.gmariotti.cardslib.library.view.CardListView;
  * Activities containing this fragment MUST implement the CallBacks
  * interface.
  */
-public class ArticleListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Article>> {
+public class ArticleListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Article>>{
 
     private static String TAG = "ArticleListFragment";
     private static final String ARG_LAW_ID = "law_id";
     private int mLawID;
-    private OnFragmentInteractionListener mListener;
+    private OnArticleSelectedListener mListener;
+    private ArticleCardClickListener mClickListener;
 
     /**
      * The fragment's ListView/GridView.
@@ -118,7 +122,7 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnArticleSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                 + " must implement OnFragmentInteractionListener");
@@ -147,7 +151,7 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
-        return new ArticlesLoaderLoader(getActivity().getApplicationContext(),mLawID);
+        return new ArticleListLoader(getActivity().getApplicationContext(),mLawID);
     }
 
     @Override
@@ -169,15 +173,31 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
 
     }
 
-    private void initCards(List<Article> articles){
+    private void initCards(final List<Article> articles){
         //Init an array of Cards
         ArrayList<Card> cards = new ArrayList<Card>();
+        Article mCurrentArticle;
+
         for (int i=0;i<articles.size();i++){
-            ArticleCard card = new ArticleCard(this.getActivity());
-            card.setTitle(articles.get(i).getName());
-            card.setText(articles.get(i).getText());
-            card.init();
-            cards.add(card);
+            final ArticleCard mCard = new ArticleCard(this.getActivity());
+            mCard.setTitle(articles.get(i).getName());
+            mCard.setText(articles.get(i).getText());
+            mCard.setArticleId(articles.get(i).getId());
+            mCurrentArticle = articles.get(i);
+
+            mCard.init();
+
+            mClickListener = new ArticleCardClickListener(articles.get(i),mListener);
+            mCard.setOnClickListener(mClickListener);
+
+//            mCard.setOnClickListener(new Card.OnCardClickListener() {
+//                @Override
+//                public void onClick(Card card, View view) {
+//                    mListener.onArticleSelected(mCurrentArticle);
+//                }
+//            });
+
+            cards.add(mCard);
         }
 
         CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(),cards);
@@ -189,6 +209,20 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
         }
 
     }
+//
+//    @Override
+//    public void onArticleCardClick(int id) {
+//        mListener.onArticleSelected((id));
+//    }
+
+//    @Override
+//    public void onListItemClick(ListView l, View v, int position, long id) {
+//
+//        ArticleListAdapter.ArticleViewHolder holder = new ArticleListAdapter.ArticleViewHolder();
+//        holder = (ArticleListAdapter.ArticleViewHolder) v.getTag();
+//        mListener.onArticleSelected((holder.id));
+//
+//    }
 
     /**
     * This interface must be implemented by activities that contain this
@@ -200,9 +234,8 @@ public class ArticleListFragment extends Fragment implements LoaderManager.Loade
     * "http://developer.android.com/training/basics/fragments/communicating.html"
     * >Communicating with Other Fragments</a> for more information.
     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+    public interface OnArticleSelectedListener {
+        public void onArticleSelected(Article article);
     }
 
 }

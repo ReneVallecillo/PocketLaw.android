@@ -63,6 +63,7 @@ public class LawListAdapter extends BaseAdapter {
 
         if(mList != null ){
             viewHolder.mTextView.setText(mList.get(position).getName());
+            viewHolder.articleId = mList.get(position).getId();
 
         }
 
@@ -74,7 +75,8 @@ public class LawListAdapter extends BaseAdapter {
         mList = list;
     }
 
-    static class ViewHolder {
-        TextView mTextView;
+    public static class ViewHolder {
+        public TextView mTextView;
+        public int articleId;
     }
 }

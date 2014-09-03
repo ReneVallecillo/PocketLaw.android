@@ -47,23 +47,24 @@ public class ArticleListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
+        ArticleViewHolder viewHolder;
 
         if (convertView == null){
             LayoutInflater li = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = li.inflate(R.layout.card_list_layout,null);
-            viewHolder = new ViewHolder();
+            viewHolder = new ArticleViewHolder();
             viewHolder.mTitle = (TextView)convertView.findViewById(R.id.article_title);
             viewHolder.mText = (TextView)convertView.findViewById(R.id.article_text);
             convertView.setTag(viewHolder);
         }else{
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ArticleViewHolder) convertView.getTag();
         }
 
         if(mList != null ){
             viewHolder.mTitle.setText(mList.get(position).getName());
             viewHolder.mText.setText(mList.get(position).getText());
+            viewHolder.id = mList.get(position).getId();
         }
 
         return convertView;
@@ -74,8 +75,9 @@ public class ArticleListAdapter extends BaseAdapter {
         mList = list;
     }
 
-    static class ViewHolder {
+    public static class ArticleViewHolder {
         TextView mTitle;
         TextView mText;
+        public int id;
     }
 }
